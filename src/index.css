@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-glow-blue: #00d2ff;
+  --color-glow-purple: #9d50bb;
+
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-transparent: transparent;
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-blue-50: #eff6ff;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-cyan-500: #06b6d4;
+  --color-orange-200: #fed7aa;
+  --color-orange-400: #fb923c;
+  --color-orange-600: #ea580c;
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-red-50: #fef2f2;
+  --color-red-500: #ef4444;
+  --color-border: #e2e8f0;
+
+  /* PDF-safe hex colors for preview */
+  --color-pdf-slate-50: #f8fafc;
+  --color-pdf-slate-100: #f1f5f9;
+  --color-pdf-slate-200: #e2e8f0;
+  --color-pdf-slate-400: #94a3b8;
+  --color-pdf-slate-700: #334155;
+  --color-pdf-slate-800: #1e293b;
+  --color-pdf-slate-900: #0f172a;
+  --color-pdf-stone-50: #fafaf9;
+  --color-pdf-stone-400: #a8a29e;
+  --color-pdf-stone-900: #1c1917;
+  --color-pdf-gray-50: #f9fafb;
+  --color-pdf-gray-100: #f3f4f6;
+  --color-pdf-gray-400: #9ca3af;
+  --color-pdf-gray-500: #6b7280;
+  --color-pdf-gray-600: #4b5563;
+  --color-pdf-gray-800: #1f2937;
+  --color-pdf-gray-900: #111827;
+  --color-pdf-blue-50: #eff6ff;
+  --color-pdf-blue-100: #dbeafe;
+  --color-pdf-blue-400: #60a5fa;
+  --color-pdf-blue-600: #2563eb;
+  --color-pdf-red-500: #ef4444;
+  --color-pdf-green-600: #16a34a;
+  --color-pdf-yellow-50: #fefce8;
+  --color-pdf-yellow-100: #fef9c3;
+  --color-pdf-yellow-400: #facc15;
+  --color-pdf-yellow-600: #ca8a04;
+  --color-pdf-yellow-800: #854d0e;
+  --color-pdf-gray-200: #e5e7eb;
+  --color-pdf-gray-300: #d1d5db;
+  --color-pdf-white-10: #ffffff1a;
+  --color-pdf-white-20: #ffffff33;
+  --color-pdf-white-30: #ffffff4d;
+
+  --breakpoint-xs: 480px;
+}
+
+@layer utilities {
+  .pdf-shadow {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased bg-slate-50 text-slate-900;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-slate-200;
+  }
+  
+  .glow-blue {
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+  }
+  
+  .glow-purple {
+    box-shadow: 0 0 20px rgba(157, 80, 187, 0.3);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 10px currentColor;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+}
+
+@keyframes glow-text {
+  0%, 100% { text-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+  50% { text-shadow: 0 0 20px rgba(59, 130, 246, 0.8), 0 0 30px rgba(34, 211, 238, 0.6); }
+}
+
+@keyframes fire-glow {
+  0%, 100% { 
+    box-shadow: 0 0 40px rgba(255, 69, 0, 0.4), 0 0 80px rgba(255, 140, 0, 0.2);
+    border-color: rgba(255, 69, 0, 0.3);
+  }
+  33% { 
+    box-shadow: 0 0 60px rgba(255, 165, 0, 0.5), 0 0 100px rgba(255, 69, 0, 0.3);
+    border-color: rgba(255, 165, 0, 0.5);
+  }
+  66% { 
+    box-shadow: 0 0 50px rgba(255, 0, 0, 0.4), 0 0 90px rgba(255, 140, 0, 0.2);
+    border-color: rgba(255, 0, 0, 0.4);
+  }
+}
+
+.animate-fire-glow {
+  animation: fire-glow 4s ease-in-out infinite;
+}
+
+@keyframes glow-text-fire {
+  0%, 100% { text-shadow: 0 0 5px rgba(255, 69, 0, 0.5); }
+  50% { text-shadow: 0 0 20px rgba(255, 69, 0, 0.8), 0 0 30px rgba(255, 140, 0, 0.6); }
+}
+
+.animate-glow-text-fire {
+  animation: glow-text-fire 3s ease-in-out infinite;
+}
+
+.animate-glow-text {
+  animation: glow-text 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 10s ease-in-out infinite;
+}

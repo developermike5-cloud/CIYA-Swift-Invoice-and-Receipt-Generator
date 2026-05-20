@@ -1,0 +1,31 @@
+{
+  "entities": {
+    "Analytics": {
+      "title": "Application Analytics",
+      "description": "Global counters for document downloads",
+      "type": "object",
+      "properties": {
+        "invoiceDownloads": {
+          "type": "integer",
+          "description": "Total number of invoice PDFs downloaded"
+        },
+        "receiptDownloads": {
+          "type": "integer",
+          "description": "Total number of receipt PDFs downloaded"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time the counters were updated"
+        }
+      },
+      "required": ["invoiceDownloads", "receiptDownloads", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/stats/global": {
+      "schema": "Analytics",
+      "description": "Single document holding global stats"
+    }
+  }
+}

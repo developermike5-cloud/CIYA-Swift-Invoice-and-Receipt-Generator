@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Analytics stats
+    match /stats/{docId} {
+      allow read: if isValidId(docId);
+      
+      allow create: if isValidId(docId) 
+        && incoming().keys().hasAll(['invoiceDownloads', 'receiptDownloads', 'updatedAt'])
+        && incoming().keys().size() == 3
+        && incoming().invoiceDownloads is int
+        && incoming().receiptDownloads is int
+        && incoming().updatedAt == request.time;
+
+      allow update: if isValidId(docId)
+        && incoming().keys().hasAll(['invoiceDownloads', 'receiptDownloads', 'updatedAt'])
+        && incoming().keys().size() == 3
+        && incoming().updatedAt == request.time
+        // Ensure values only go UP and only one at a time (or just up)
+        && (
+          (incoming().invoiceDownloads == existing().invoiceDownloads + 1 && incoming().receiptDownloads == existing().receiptDownloads) ||
+          (incoming().receiptDownloads == existing().receiptDownloads + 1 && incoming().invoiceDownloads == existing().invoiceDownloads)
+        );
+    }
+  }
+}
