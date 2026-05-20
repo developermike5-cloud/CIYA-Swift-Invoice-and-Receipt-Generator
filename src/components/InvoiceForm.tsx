@@ -7,10 +7,9 @@ import { cn } from '../lib/utils';
 interface InvoiceFormProps {
   data: InvoiceData;
   onChange: (data: InvoiceData) => void;
-  children?: React.ReactNode;
 }
 
-export default function InvoiceForm({ data, onChange, children }: InvoiceFormProps) {
+export default function InvoiceForm({ data, onChange }: InvoiceFormProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const signaturePadRef = useRef<SignaturePad | null>(null);
   const dataRef = useRef(data);
@@ -202,18 +201,6 @@ export default function InvoiceForm({ data, onChange, children }: InvoiceFormPro
           </div>
         </div>
       </section>
-
-      {children && (
-        <section className="space-y-6 pt-4 pb-8">
-          <div className="flex items-center justify-between">
-            <h3 className="text-base font-black uppercase tracking-[0.2em] text-blue-600/80 underline underline-offset-8">Live Interactive Preview</h3>
-            <span className="text-xs font-bold text-slate-400 bg-slate-200/50 px-3 py-1 rounded-full uppercase tracking-widest hidden sm:inline-block">Click text/images to edit</span>
-          </div>
-          <div className="w-full flex justify-center">
-            {children}
-          </div>
-        </section>
-      )}
 
       {/* Business Info */}
       <section className="space-y-10">

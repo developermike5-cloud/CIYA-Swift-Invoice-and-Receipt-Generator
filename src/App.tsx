@@ -32,6 +32,7 @@ export default function App() {
   const [isDownloadingImage, setIsDownloadingImage] = useState(false);
   const [isCapturingImage, setIsCapturingImage] = useState(false);
   const [exportHistory, setExportHistory] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
 
   useEffect(() => {
     if (isAdmin && activeModal === 'stats') {
@@ -116,28 +117,6 @@ export default function App() {
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), duration);
   };
-
-  useEffect(() => {
-    const tipMessage = "💡 Tip: Click anywhere on the preview to edit it directly, or use the editor below!";
-    
-    // First trigger after 10 seconds
-    const initialTimeout = setTimeout(() => {
-      showToast(tipMessage, 8000);
-      
-      // Then re-trigger every 120 seconds
-      const interval = setInterval(() => {
-        showToast(tipMessage, 8000);
-      }, 120000);
-      
-      // Store on clickTimeoutRef just for cleanup if needed, but useEffect cleanup handles it
-      clickTimeoutRef.current = interval as any;
-    }, 10000);
-
-    return () => {
-      clearTimeout(initialTimeout);
-      if (clickTimeoutRef.current) clearInterval(clickTimeoutRef.current as any);
-    };
-  }, []);
 
   const handleDownloadPDF = async () => {
     const element = document.getElementById('invoice-preview');
@@ -509,27 +488,27 @@ Don't just run a business, command a BRAND that speaks for itself.
                 </button>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3 mt-1">
                 <button
                   onClick={() => setActiveModal('how-to')}
-                  className="flex items-center gap-1 px-2 py-1 bg-blue-600 border border-blue-700 rounded text-[9px] font-black text-white uppercase tracking-wider hover:bg-blue-700 transition-all shadow-sm group/btn"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 border border-blue-700 rounded-lg text-[11px] font-black text-white uppercase tracking-wider hover:bg-blue-700 transition-all shadow-sm group/btn"
                 >
-                  <BookOpen size={10} className="group-hover/btn:scale-110 transition-transform" />
+                  <BookOpen size={14} className="group-hover/btn:scale-110 transition-transform" />
                   How to Use
                 </button>
                 <button
                   onClick={() => setActiveModal('about')}
-                  className="flex items-center gap-1 px-2 py-1 bg-orange-500 border border-orange-600 rounded text-[9px] font-black text-white uppercase tracking-wider hover:bg-orange-600 transition-all shadow-sm group/btn"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-orange-500 border border-orange-600 rounded-lg text-[11px] font-black text-white uppercase tracking-wider hover:bg-orange-600 transition-all shadow-sm group/btn"
                 >
-                  <Users size={10} className="group-hover/btn:scale-110 transition-transform" />
+                  <Users size={14} className="group-hover/btn:scale-110 transition-transform" />
                   About Us
                 </button>
                 {isAdmin && (
                   <button
                     onClick={() => setActiveModal('stats')}
-                    className="flex items-center gap-1 px-2 py-1 bg-slate-800 border border-slate-700 rounded text-[9px] font-black text-white uppercase tracking-wider hover:bg-slate-700 transition-all shadow-sm group/btn"
+                    className="flex items-center gap-1.5 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-[11px] font-black text-white uppercase tracking-wider hover:bg-slate-700 transition-all shadow-sm group/btn"
                   >
-                    <BarChart3 size={10} className="group-hover/btn:scale-110 transition-transform" />
+                    <BarChart3 size={14} className="group-hover/btn:scale-110 transition-transform" />
                     Admin
                   </button>
                 )}
@@ -543,7 +522,7 @@ Don't just run a business, command a BRAND that speaks for itself.
         <div className="max-w-4xl mx-auto">
           <div className="mb-10 text-center">
             <h2 className="text-4xl font-black text-slate-900 mb-3 tracking-tight flex items-center justify-center gap-x-2 flex-wrap">
-              Create your business
+              Create your swift business
               <span className="relative inline-block h-[1.1em] overflow-hidden align-bottom">
                 <AnimatePresence mode="wait">
                   <motion.span
@@ -577,86 +556,140 @@ Don't just run a business, command a BRAND that speaks for itself.
             <p className="text-slate-500 text-lg">Fill in the details below to generate your professional document.</p>
           </div>
           
-          <InvoiceForm data={data} onChange={setData}>
-            {/* INJECTED PREVIEW SECTION */}
-            <div className="w-full flex flex-col items-center bg-slate-900 pt-8 pb-10 px-4 sm:px-8 rounded-[40px] relative shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]">
-               {/* Background decors for the preview block */}
-               <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-400 via-transparent to-transparent rounded-[40px] pointer-events-none"></div>
-               
-               <div className="w-full flex flex-col items-center relative z-10">
-                 <div className="transform scale-[0.52] xs:scale-[0.62] sm:scale-[0.78] md:scale-[0.88] lg:scale-100 origin-top transition-transform duration-500" style={{ width: '800px' }}>
-                   <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/10 relative bg-white">
-                     <InvoicePreview 
-                       data={data} 
-                       onChange={setData} 
-                       isExportMode={isExporting || isCapturingImage || isDownloadingImage}
-                     />
+          <div className="pb-24">
+            {activeTab === 'editor' ? (
+              <InvoiceForm data={data} onChange={setData} />
+            ) : (
+              <div className="w-full flex flex-col items-center bg-slate-900 pt-8 pb-10 px-0 sm:px-8 rounded-[40px] relative shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]">
+                 {/* Background decors for the preview block */}
+                 <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-400 via-transparent to-transparent rounded-[40px] pointer-events-none"></div>
+                 
+                 <div className="relative z-20 mb-6 text-center px-4 w-full">
+                   <h3 className="text-white font-black uppercase tracking-widest text-lg mb-1">Live Interactive Preview</h3>
+                   <span className="text-[10px] font-bold text-slate-900 bg-emerald-400 px-3 py-1 rounded-full uppercase tracking-widest inline-block shadow-[0_0_15px_rgba(52,211,153,0.5)] animate-pulse mb-6">Click any text or image to edit directly!</span>
+                   
+                   <div className="max-w-xs mx-auto mb-2 text-left">
+                     <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Template Style</label>
+                     <div className="relative">
+                       <select
+                         value={data.template}
+                         onChange={(e) => setData({ ...data, template: e.target.value as any })}
+                         className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-sm text-white font-black focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer pr-10 shadow-sm backdrop-blur-sm"
+                       >
+                         <option className="text-slate-900" value="minimal">Minimalist Blue</option>
+                         <option className="text-slate-900" value="corporate">Corporate Dark</option>
+                         <option className="text-slate-900" value="elegant">Elegant Serif</option>
+                         <option className="text-slate-900" value="modern">Modern Gradient</option>
+                         <option className="text-slate-900" value="playful">Playful Yellow</option>
+                       </select>
+                       <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                         <ChevronDown size={16} className="text-slate-400" />
+                       </div>
+                     </div>
                    </div>
                  </div>
-               </div>
 
-               {/* ACTION BUTTONS (Moved inside preview block) */}
-               <div className="flex flex-col items-center gap-6 relative z-20 mt-[-520px] xs:mt-[-410px] sm:mt-[-230px] md:mt-[-120px] lg:mt-12 w-full pt-4">
-                 <button
-                   onClick={handleDownloadPDF}
-                   disabled={isExporting}
-                   className={cn(
-                     "flex items-center gap-3 px-12 py-5 bg-blue-600 text-white rounded-2xl font-black shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:shadow-[0_0_40px_rgba(37,99,235,0.6)] hover:scale-[1.05] active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 uppercase tracking-widest text-sm",
-                     isExporting && "animate-pulse"
-                   )}
-                 >
-                   {isExporting ? (
-                     <>
-                       <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin" />
-                       <span>Exporting...</span>
-                     </>
-                   ) : (
-                     <>
-                       <Share2 size={20} />
-                       <span>Export & Share</span>
-                     </>
-                   )}
-                 </button>
-
-                 {/* Secondary Actions */}
-                 <div className="flex flex-wrap items-center justify-center gap-4 w-full">
-                   <button
-                     onClick={handleReset}
-                     className="flex items-center gap-2 px-6 py-3 bg-white/10 text-white hover:text-red-400 hover:bg-white/20 rounded-xl transition-all border border-white/10 backdrop-blur-sm group/btn"
-                     title="Reset Data"
-                   >
-                     <RotateCcw size={16} className="group-hover/btn:rotate-[-45deg] transition-transform" />
-                     <span className="text-[10px] font-black uppercase tracking-widest">Reset</span>
-                   </button>
-                   <button
-                     onClick={handleCopyLink}
-                     className="flex items-center gap-2 px-6 py-3 bg-white/10 text-white hover:text-blue-400 hover:bg-white/20 rounded-xl transition-all border border-white/10 backdrop-blur-sm group/btn"
-                     title="Copy Link"
-                   >
-                     <Share2 size={16} className="group-hover/btn:scale-110 transition-transform" />
-                     <span className="text-[10px] font-black uppercase tracking-widest">Share Link</span>
-                   </button>
+                 <div className="w-full flex flex-col items-center relative z-10 w-full overflow-x-hidden">
+                   <div className="transform scale-[0.45] xs:scale-[0.55] sm:scale-[0.78] md:scale-[0.88] lg:scale-100 origin-top transition-transform duration-500" style={{ width: '800px' }}>
+                     <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/10 relative bg-white">
+                       <InvoicePreview 
+                         data={data} 
+                         onChange={setData} 
+                         isExportMode={isExporting || isCapturingImage || isDownloadingImage}
+                       />
+                     </div>
+                   </div>
                  </div>
-               </div>
-            </div>
+
+                 {/* ACTION BUTTONS (Moved inside preview block) */}
+                 <div className="flex flex-col items-center gap-6 relative z-20 mt-[-560px] xs:mt-[-450px] sm:mt-[-230px] md:mt-[-120px] lg:mt-12 w-full pt-4 px-4">
+                   <button
+                     onClick={handleDownloadPDF}
+                     disabled={isExporting}
+                     className={cn(
+                       "flex items-center gap-3 px-12 py-5 bg-blue-600 text-white rounded-2xl font-black shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:shadow-[0_0_40px_rgba(37,99,235,0.6)] hover:scale-[1.05] active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 uppercase tracking-widest text-sm",
+                       isExporting && "animate-pulse"
+                     )}
+                   >
+                     {isExporting ? (
+                       <>
+                         <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+                         <span>Exporting...</span>
+                       </>
+                     ) : (
+                       <>
+                         <Share2 size={20} />
+                         <span>Export & Share</span>
+                       </>
+                     )}
+                   </button>
+
+                   {/* Secondary Actions */}
+                   <div className="flex flex-wrap items-center justify-center gap-4 w-full">
+                     <button
+                       onClick={handleReset}
+                       className="flex items-center gap-2 px-6 py-3 bg-white/10 text-white hover:text-red-400 hover:bg-white/20 rounded-xl transition-all border border-white/10 backdrop-blur-sm group/btn"
+                       title="Reset Data"
+                     >
+                       <RotateCcw size={16} className="group-hover/btn:rotate-[-45deg] transition-transform" />
+                       <span className="text-[10px] font-black uppercase tracking-widest">Reset</span>
+                     </button>
+                     <button
+                       onClick={handleCopyLink}
+                       className="flex items-center gap-2 px-6 py-3 bg-white/10 text-white hover:text-blue-400 hover:bg-white/20 rounded-xl transition-all border border-white/10 backdrop-blur-sm group/btn"
+                       title="Copy Link"
+                     >
+                       <Share2 size={16} className="group-hover/btn:scale-110 transition-transform" />
+                       <span className="text-[10px] font-black uppercase tracking-widest">Share Link</span>
+                     </button>
+                   </div>
+                 </div>
+              </div>
+            )}
             
-            <div className="w-full overflow-hidden bg-slate-900 border-y border-white/10 text-slate-400 font-bold uppercase tracking-widest py-3 my-4 text-[10px] rounded-xl shadow-lg relative flex">
+            <div className="w-full overflow-hidden bg-slate-900 border-y border-white/10 text-slate-400 font-bold uppercase tracking-widest py-3 my-8 text-[10px] rounded-xl shadow-lg relative flex">
               <motion.div 
                 className="whitespace-nowrap flex items-center gap-10 min-w-max"
                 animate={{ x: ["0%", "-50%"] }}
-                transition={{ repeat: Infinity, ease: "linear", duration: 30 }}
+                transition={{ repeat: Infinity, ease: "linear", duration: 45 }}
               >
-                {Array(6).fill("✨  SWIFT INVOICE • MODERN DOCUMENTS IN 60 SECS • POWERED BY CIYA ACADEMY • BUILD TRUST & DRIVE SALES").map((text, i) => (
+                {Array(6).fill("✨  SWIFT INVOICE & RECEIPT • MODERN DOCUMENTS IN 60 SECS • POWERED BY CIYA ACADEMY • BUILD TRUST & DRIVE SALES").map((text, i) => (
                   <span key={i}>{text}</span>
                 ))}
-                {Array(6).fill("✨  SWIFT INVOICE • MODERN DOCUMENTS IN 60 SECS • POWERED BY CIYA ACADEMY • BUILD TRUST & DRIVE SALES").map((text, i) => (
+                {Array(6).fill("✨  SWIFT INVOICE & RECEIPT • MODERN DOCUMENTS IN 60 SECS • POWERED BY CIYA ACADEMY • BUILD TRUST & DRIVE SALES").map((text, i) => (
                   <span key={i + 6}>{text}</span>
                 ))}
               </motion.div>
             </div>
-          </InvoiceForm>
+          </div>
         </div>
       </main>
+
+      {/* Sticky Bottom Nav */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] flex justify-center pointer-events-none w-max">
+        <div className="flex bg-slate-100 p-1.5 rounded-full shadow-2xl border border-slate-200 pointer-events-auto">
+          <button 
+            onClick={() => setActiveTab('editor')}
+            className={cn(
+              "flex items-center gap-2 px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all", 
+              activeTab === 'editor' ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+            )}
+          >
+             <FileText size={16}/> 
+             Editor
+          </button>
+          <button 
+            onClick={() => setActiveTab('preview')}
+            className={cn(
+              "flex items-center gap-2 px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all", 
+              activeTab === 'preview' ? "bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)]" : "text-slate-500 hover:text-slate-700"
+            )}
+          >
+             <Eye size={16}/> 
+             Live Preview
+          </button>
+        </div>
+      </div>
 
       {/* Success Notification */}
       {/* Modals */}
@@ -709,7 +742,7 @@ Don't just run a business, command a BRAND that speaks for itself.
             </div>
           </div>
           
-          <div className="w-full aspect-video rounded-2xl overflow-hidden border border-slate-200 shadow-sm mt-4">
+          <div className="w-full aspect-video rounded-2xl overflow-hidden border border-slate-200 shadow-sm mt-4 lg:min-h-[400px]">
             <p className="text-[9px] font-bold text-center py-2 bg-slate-50 uppercase tracking-widest text-slate-500">Video Guide: How to use Swift Invoice</p>
             <iframe 
               width="100%" 
