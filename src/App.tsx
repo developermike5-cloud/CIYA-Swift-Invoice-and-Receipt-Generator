@@ -509,28 +509,28 @@ Don't just run a business, command a BRAND that speaks for itself.
                 </button>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => setActiveModal('how-to')}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 border border-blue-700 rounded-xl text-xs font-black text-white uppercase tracking-widest hover:bg-blue-700 transition-all shadow-md group/btn"
+                  className="flex items-center gap-1 px-2 py-1 bg-blue-600 border border-blue-700 rounded text-[9px] font-black text-white uppercase tracking-wider hover:bg-blue-700 transition-all shadow-sm group/btn"
                 >
-                  <BookOpen size={14} className="group-hover/btn:scale-110 transition-transform" />
+                  <BookOpen size={10} className="group-hover/btn:scale-110 transition-transform" />
                   How to Use
                 </button>
                 <button
                   onClick={() => setActiveModal('about')}
-                  className="flex items-center gap-2 px-4 py-2 bg-orange-500 border border-orange-600 rounded-xl text-xs font-black text-white uppercase tracking-widest hover:bg-orange-600 transition-all shadow-md group/btn"
+                  className="flex items-center gap-1 px-2 py-1 bg-orange-500 border border-orange-600 rounded text-[9px] font-black text-white uppercase tracking-wider hover:bg-orange-600 transition-all shadow-sm group/btn"
                 >
-                  <Users size={14} className="group-hover/btn:scale-110 transition-transform" />
+                  <Users size={10} className="group-hover/btn:scale-110 transition-transform" />
                   About Us
                 </button>
                 {isAdmin && (
                   <button
                     onClick={() => setActiveModal('stats')}
-                    className="flex items-center gap-2 px-4 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs font-black text-white uppercase tracking-widest hover:bg-slate-700 transition-all shadow-md group/btn"
+                    className="flex items-center gap-1 px-2 py-1 bg-slate-800 border border-slate-700 rounded text-[9px] font-black text-white uppercase tracking-wider hover:bg-slate-700 transition-all shadow-sm group/btn"
                   >
-                    <BarChart3 size={14} className="group-hover/btn:scale-110 transition-transform" />
-                    Admin Panel
+                    <BarChart3 size={10} className="group-hover/btn:scale-110 transition-transform" />
+                    Admin
                   </button>
                 )}
               </div>
@@ -639,6 +639,21 @@ Don't just run a business, command a BRAND that speaks for itself.
                  </div>
                </div>
             </div>
+            
+            <div className="w-full overflow-hidden bg-slate-900 border-y border-white/10 text-slate-400 font-bold uppercase tracking-widest py-3 my-4 text-[10px] rounded-xl shadow-lg relative flex">
+              <motion.div 
+                className="whitespace-nowrap flex items-center gap-10 min-w-max"
+                animate={{ x: ["0%", "-50%"] }}
+                transition={{ repeat: Infinity, ease: "linear", duration: 30 }}
+              >
+                {Array(6).fill("✨  SWIFT INVOICE • MODERN DOCUMENTS IN 60 SECS • POWERED BY CIYA ACADEMY • BUILD TRUST & DRIVE SALES").map((text, i) => (
+                  <span key={i}>{text}</span>
+                ))}
+                {Array(6).fill("✨  SWIFT INVOICE • MODERN DOCUMENTS IN 60 SECS • POWERED BY CIYA ACADEMY • BUILD TRUST & DRIVE SALES").map((text, i) => (
+                  <span key={i + 6}>{text}</span>
+                ))}
+              </motion.div>
+            </div>
           </InvoiceForm>
         </div>
       </main>
@@ -650,51 +665,52 @@ Don't just run a business, command a BRAND that speaks for itself.
         onClose={() => setActiveModal(null)}
         title="How to Use Swift Invoice"
       >
-        <div className="space-y-8">
-          <div className="flex gap-4">
-            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 font-black text-blue-600">1</div>
+        <div className="space-y-4">
+          <div className="flex gap-3">
+            <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center shrink-0 font-black text-blue-600 text-[9px]">1</div>
             <div>
-              <h4 className="font-black text-slate-900 uppercase tracking-wider mb-1">Business Branding</h4>
-              <p className="text-sm">Upload your logo (it will be made circular automatically) and enter your business name, address, and contact details.</p>
+              <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-wider mb-1">Business Branding</h4>
+              <p className="text-[10px] text-slate-600">Upload your logo (it will be made circular automatically) and enter your business name, address, and contact details.</p>
             </div>
           </div>
-          <div className="flex gap-4">
-            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 font-black text-blue-600">2</div>
+          <div className="flex gap-3">
+            <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center shrink-0 font-black text-blue-600 text-[9px]">2</div>
             <div>
-              <h4 className="font-black text-slate-900 uppercase tracking-wider mb-1">Customer Details</h4>
-              <p className="text-sm">Enter the client's name and address in the "Bill To" section to personalize the document.</p>
+              <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-wider mb-1">Customer Details</h4>
+              <p className="text-[10px] text-slate-600">Enter the client's name and address in the "Bill To" section to personalize the document.</p>
             </div>
           </div>
-          <div className="flex gap-4">
-            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 font-black text-blue-600">3</div>
+          <div className="flex gap-3">
+            <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center shrink-0 font-black text-blue-600 text-[9px]">3</div>
             <div>
-              <h4 className="font-black text-slate-900 uppercase tracking-wider mb-1">Document Customization</h4>
-              <p className="text-sm">Choose between "Invoice" or "Receipt". Use the <b>Template Style Selector</b> below the live preview to switch between Minimalist, Corporate, Elegant, Modern, or Playful designs.</p>
+              <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-wider mb-1">Document Customization</h4>
+              <p className="text-[10px] text-slate-600">Choose between "Invoice" or "Receipt". Use the <b>Template Style</b> selector below the live preview to switch between designs.</p>
             </div>
           </div>
-          <div className="flex gap-4">
-            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 font-black text-blue-600">4</div>
+          <div className="flex gap-3">
+            <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center shrink-0 font-black text-blue-600 text-[9px]">4</div>
             <div>
-              <h4 className="font-black text-slate-900 uppercase tracking-wider mb-1">Item Management</h4>
-              <p className="text-sm">Add items with descriptions, quantities, and prices. You can even upload images for each item to make your document more descriptive and professional.</p>
+              <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-wider mb-1">Item Management</h4>
+              <p className="text-[10px] text-slate-600">Add items with descriptions, quantities, and prices. You can even upload images for each item.</p>
             </div>
           </div>
-          <div className="flex gap-4">
-            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 font-black text-blue-600">5</div>
+          <div className="flex gap-3">
+            <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center shrink-0 font-black text-blue-600 text-[9px]">5</div>
             <div>
-              <h4 className="font-black text-slate-900 uppercase tracking-wider mb-1">Financials & Signature</h4>
-              <p className="text-sm">Set your currency and add a discount percentage. Use the <b>Signature Pad</b> to draw your authorized signature directly on the document.</p>
+              <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-wider mb-1">Financials & Signature</h4>
+              <p className="text-[10px] text-slate-600">Set your currency and add a discount percentage. Use the <b>Signature Pad</b> to draw your authorized signature.</p>
             </div>
           </div>
-          <div className="flex gap-4">
-            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 font-black text-blue-600">6</div>
+          <div className="flex gap-3">
+            <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center shrink-0 font-black text-blue-600 text-[9px]">6</div>
             <div>
-              <h4 className="font-black text-slate-900 uppercase tracking-wider mb-1">Export & Share</h4>
-              <p className="text-sm">Once satisfied, click <b>"Download Now"</b> to get a professional PDF. Use the WhatsApp or Share buttons to send it to your clients instantly.</p>
+              <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-wider mb-1">Export & Share</h4>
+              <p className="text-[10px] text-slate-600">Once satisfied, click <b>"Export & Share"</b> to get a professional PDF, or copy the link to share instantly.</p>
             </div>
           </div>
           
-          <div className="w-full aspect-video rounded-3xl overflow-hidden border border-slate-200 shadow-sm mt-4">
+          <div className="w-full aspect-video rounded-2xl overflow-hidden border border-slate-200 shadow-sm mt-4">
+            <p className="text-[9px] font-bold text-center py-2 bg-slate-50 uppercase tracking-widest text-slate-500">Video Guide: How to use Swift Invoice</p>
             <iframe 
               width="100%" 
               height="100%" 
@@ -783,20 +799,42 @@ Don't just run a business, command a BRAND that speaks for itself.
           </div>
 
           <div className="mt-8">
-            <h4 className="text-xs font-black text-slate-900 uppercase tracking-widest mb-4">Recent Exports History</h4>
-            <div className="space-y-3 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
-              {exportHistory.length > 0 ? exportHistory.map((item) => (
-                <div key={item.id} className="p-4 bg-white border border-slate-200 rounded-xl flex items-center justify-between shadow-sm">
-                  <div>
-                    <p className="text-xs font-bold text-slate-900">{item.businessName} <span className="text-slate-400 font-normal">→</span> {item.customerName}</p>
-                    <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-widest">{item.type} • {item.number}</p>
+            <h4 className="text-xs font-black text-slate-900 uppercase tracking-widest mb-4">Recent Exports By Date</h4>
+            <div className="space-y-6 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+              {exportHistory.length > 0 ? (
+                Object.entries(exportHistory.reduce((acc, current) => {
+                  const dateObj = new Date(current.date);
+                  let dateStr = dateObj.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                  
+                  // Simple check for today/yesterday if helpful
+                  const today = new Date();
+                  const yesterday = new Date(today);
+                  yesterday.setDate(yesterday.getDate() - 1);
+                  if (dateObj.toDateString() === today.toDateString()) dateStr = "Today";
+                  else if (dateObj.toDateString() === yesterday.toDateString()) dateStr = "Yesterday";
+
+                  if (!acc[dateStr]) acc[dateStr] = [];
+                  acc[dateStr].push(current);
+                  return acc;
+                }, {} as Record<string, any[]>)).map(([dateLabel, items]: [string, any]) => (
+                  <div key={dateLabel}>
+                    <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-100 pb-1">{dateLabel} ({items.length})</h5>
+                    <div className="space-y-3">
+                      {items.map((item: any) => (
+                        <div key={item.id} className="p-4 bg-white border border-slate-200 rounded-xl flex items-center justify-between shadow-sm">
+                          <div>
+                            <p className="text-xs font-bold text-slate-900">{item.businessName} <span className="text-slate-400 font-normal">→</span> {item.customerName}</p>
+                            <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-widest">{item.type} • {item.number}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-[10px] font-bold text-slate-700">{new Date(item.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs font-bold text-slate-700">{new Date(item.date).toLocaleDateString()}</p>
-                    <p className="text-[10px] text-slate-400 mt-1 uppercase">{new Date(item.date).toLocaleTimeString()}</p>
-                  </div>
-                </div>
-              )) : (
+                ))
+              ) : (
                 <p className="text-xs text-slate-500 text-center py-4 italic">No recent exports found.</p>
               )}
             </div>
@@ -905,9 +943,9 @@ Don't just run a business, command a BRAND that speaks for itself.
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 py-4 rounded-2xl shadow-[0_10px_40px_rgba(59,130,246,0.5)] flex items-center gap-3 font-bold"
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-slate-900 text-white px-5 py-2.5 rounded-full shadow-2xl flex items-center gap-2 font-black text-[10px] uppercase tracking-widest border border-white/10"
           >
-            <CheckCircle2 size={24} />
+            <CheckCircle2 size={14} className="text-emerald-400" />
             <span>{toastMessage}</span>
           </motion.div>
         )}

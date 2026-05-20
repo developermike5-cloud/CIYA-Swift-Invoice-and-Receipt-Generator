@@ -598,6 +598,7 @@ export default function InvoiceForm({ data, onChange, children }: InvoiceFormPro
         
         {/* Tutorial Video */}
         <div className="w-full aspect-video rounded-3xl overflow-hidden border border-slate-200 shadow-sm mt-8">
+          <p className="text-xs font-bold text-center py-2 bg-slate-50 uppercase tracking-widest text-slate-500">Video Guide: How to use Swift Invoice</p>
           <iframe 
             width="100%" 
             height="100%" 
