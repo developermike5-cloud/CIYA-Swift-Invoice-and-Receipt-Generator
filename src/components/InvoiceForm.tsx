@@ -137,67 +137,46 @@ export default function InvoiceForm({ data, onChange }: InvoiceFormProps) {
 
   return (
     <div className="space-y-10 pb-20">
-      {/* Document Type & Template */}
+      {/* Document Type */}
       <section className="space-y-6">
-        <h3 className="text-base font-black uppercase tracking-[0.2em] text-blue-600/80 underline underline-offset-8">Document Type & Template</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl">
-          <div>
-            <label className="block text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Select Type</label>
-            <div className="flex p-2 bg-white rounded-2xl border border-slate-200 shadow-sm">
-              <button
-                onClick={() => {
-                  const defaultNote = `Payment is expected within 7 days. Thank you for choosing ${data.businessName || 'our business'}. We appreciate your trust.`;
-                  onChange({ 
-                    ...data, 
-                    type: 'invoice', 
-                    number: data.number.replace('REC', 'INV'),
-                    notes: defaultNote
-                  });
-                }}
-                className={cn(
-                  "flex-1 py-4 text-base font-black rounded-xl transition-all uppercase tracking-widest",
-                  data.type === 'invoice' ? "bg-blue-600 text-white shadow-lg scale-[1.02]" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
-                )}
-              >
-                Invoice
-              </button>
-              <button
-                onClick={() => {
-                  const defaultNote = `Payment received with thanks. ${data.businessName || 'our business'} values your patronage! Keep this receipt for your records. We look forward to seeing you again soon!`;
-                  onChange({ 
-                    ...data, 
-                    type: 'receipt', 
-                    number: data.number.replace('INV', 'REC'),
-                    notes: defaultNote
-                  });
-                }}
-                className={cn(
-                  "flex-1 py-4 text-base font-black rounded-xl transition-all uppercase tracking-widest",
-                  data.type === 'receipt' ? "bg-blue-600 text-white shadow-lg scale-[1.02]" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
-                )}
-              >
-                Receipt
-              </button>
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Select Template Style</label>
-            <div className="relative">
-              <select
-                value={data.template}
-                onChange={(e) => onChange({ ...data, template: e.target.value as any })}
-                className="w-full px-6 py-5 bg-white border border-slate-200 rounded-2xl text-base text-slate-900 font-black focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer pr-12 shadow-sm"
-              >
-                <option value="minimal">Minimalist Blue</option>
-                <option value="corporate">Corporate Dark</option>
-                <option value="elegant">Elegant Serif</option>
-                <option value="modern">Modern Gradient</option>
-                <option value="playful">Playful Yellow</option>
-              </select>
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                <ChevronDown size={20} className="text-slate-400" />
-              </div>
-            </div>
+        <h3 className="text-base font-black uppercase tracking-[0.2em] text-blue-600/80 underline underline-offset-8">Document Type</h3>
+        <div className="max-w-md">
+          <label className="block text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Select Type</label>
+          <div className="flex p-2 bg-white rounded-2xl border border-slate-200 shadow-sm">
+            <button
+              onClick={() => {
+                const defaultNote = `Payment is expected within 7 days. Thank you for choosing ${data.businessName || 'our business'}. We appreciate your trust.`;
+                onChange({ 
+                  ...data, 
+                  type: 'invoice', 
+                  number: data.number.replace('REC', 'INV'),
+                  notes: defaultNote
+                });
+              }}
+              className={cn(
+                "flex-1 py-4 text-base font-black rounded-xl transition-all uppercase tracking-widest",
+                data.type === 'invoice' ? "bg-blue-600 text-white shadow-lg scale-[1.02]" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
+              )}
+            >
+              Invoice
+            </button>
+            <button
+              onClick={() => {
+                const defaultNote = `Payment received with thanks. ${data.businessName || 'our business'} values your patronage! Keep this receipt for your records. We look forward to seeing you again soon!`;
+                onChange({ 
+                  ...data, 
+                  type: 'receipt', 
+                  number: data.number.replace('INV', 'REC'),
+                  notes: defaultNote
+                });
+              }}
+              className={cn(
+                "flex-1 py-4 text-base font-black rounded-xl transition-all uppercase tracking-widest",
+                data.type === 'receipt' ? "bg-blue-600 text-white shadow-lg scale-[1.02]" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
+              )}
+            >
+              Receipt
+            </button>
           </div>
         </div>
       </section>

@@ -6,10 +6,6 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    function isValidId(id) {
-      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
-    }
-
     function incoming() {
       return request.resource.data;
     }
@@ -20,16 +16,16 @@ service cloud.firestore {
 
     // Analytics stats
     match /stats/{docId} {
-      allow read: if isValidId(docId);
+      allow read: if docId == 'global';
       
-      allow create: if isValidId(docId) 
+      allow create: if docId == 'global' 
         && incoming().keys().hasAll(['invoiceDownloads', 'receiptDownloads', 'updatedAt'])
         && incoming().keys().size() == 3
         && incoming().invoiceDownloads is int
         && incoming().receiptDownloads is int
         && incoming().updatedAt == request.time;
 
-      allow update: if isValidId(docId)
+      allow update: if docId == 'global'
         && incoming().keys().hasAll(['invoiceDownloads', 'receiptDownloads', 'updatedAt'])
         && incoming().keys().size() == 3
         && incoming().updatedAt == request.time
@@ -38,6 +34,25 @@ service cloud.firestore {
           (incoming().invoiceDownloads == existing().invoiceDownloads + 1 && incoming().receiptDownloads == existing().receiptDownloads) ||
           (incoming().receiptDownloads == existing().receiptDownloads + 1 && incoming().invoiceDownloads == existing().invoiceDownloads)
         );
+    }
+
+    // Exports history
+    match /exports_history/{historyId} {
+      allow read: if historyId is string;
+
+      allow create: if historyId is string
+        && incoming().keys().hasAll(['type', 'businessName', 'customerName', 'number', 'date', 'timestamp'])
+        && incoming().keys().size() == 6
+        && (incoming().type == 'invoice' || incoming().type == 'receipt')
+        && incoming().businessName is string
+        && incoming().businessName.size() <= 200
+        && incoming().customerName is string
+        && incoming().customerName.size() <= 200
+        && incoming().number is string
+        && incoming().number.size() <= 50
+        && incoming().date is string
+        && incoming().date.size() <= 100
+        && incoming().timestamp == request.time;
     }
   }
 }

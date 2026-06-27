@@ -20,12 +20,50 @@
         }
       },
       "required": ["invoiceDownloads", "receiptDownloads", "updatedAt"]
+    },
+    "ExportHistory": {
+      "title": "Export History",
+      "description": "Log entry of a generated and downloaded document",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["invoice", "receipt"],
+          "description": "Document type, either invoice or receipt"
+        },
+        "businessName": {
+          "type": "string",
+          "description": "Name of the business generating the document"
+        },
+        "customerName": {
+          "type": "string",
+          "description": "Name of the billed customer"
+        },
+        "number": {
+          "type": "string",
+          "description": "Invoice or receipt number"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO timestamp of the download event"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Firebase server timestamp of the log entry"
+        }
+      },
+      "required": ["type", "businessName", "customerName", "number", "date", "timestamp"]
     }
   },
   "firestore": {
     "/stats/global": {
       "schema": "Analytics",
       "description": "Single document holding global stats"
+    },
+    "/exports_history/{historyId}": {
+      "schema": "ExportHistory",
+      "description": "Logs of all downloaded documents"
     }
   }
 }

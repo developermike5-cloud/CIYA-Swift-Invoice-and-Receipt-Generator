@@ -9,7 +9,7 @@ import Modal from './components/Modal';
 import { DEFAULT_INVOICE, InvoiceData } from './types';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { cn, generateInvNumber } from './lib/utils';
-import { db } from './lib/firebase';
+import { db, handleFirestoreError, OperationType } from './lib/firebase';
 import { doc, onSnapshot, updateDoc, increment, serverTimestamp, setDoc, getDoc, collection, addDoc, query, orderBy, limit, getDocs } from 'firebase/firestore';
 
 export default function App() {
@@ -33,6 +33,7 @@ export default function App() {
   const [isCapturingImage, setIsCapturingImage] = useState(false);
   const [exportHistory, setExportHistory] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
+  const [showCongratulation, setShowCongratulation] = useState(false);
 
   useEffect(() => {
     if (isAdmin && activeModal === 'stats') {
@@ -43,6 +44,7 @@ export default function App() {
           setExportHistory(snap.docs.map(d => ({id: d.id, ...d.data()})));
         } catch (e) {
           console.error("Could not fetch history:", e);
+          handleFirestoreError(e, OperationType.LIST, 'exports_history');
         }
       };
       fetchHistory();
@@ -88,8 +90,12 @@ export default function App() {
           invoiceDownloads: 0,
           receiptDownloads: 0,
           updatedAt: serverTimestamp()
+        }).catch((err) => {
+          handleFirestoreError(err, OperationType.WRITE, 'stats/global');
         });
       }
+    }, (err) => {
+      handleFirestoreError(err, OperationType.GET, 'stats/global');
     });
 
     return () => unsubscribe();
@@ -143,10 +149,14 @@ export default function App() {
 
       // Update Firebase Stats
       const statsRef = doc(db, 'stats', 'global');
-      await updateDoc(statsRef, {
-        [data.type === 'invoice' ? 'invoiceDownloads' : 'receiptDownloads']: increment(1),
-        updatedAt: serverTimestamp()
-      });
+      try {
+        await updateDoc(statsRef, {
+          [data.type === 'invoice' ? 'invoiceDownloads' : 'receiptDownloads']: increment(1),
+          updatedAt: serverTimestamp()
+        });
+      } catch (err) {
+        handleFirestoreError(err, OperationType.UPDATE, 'stats/global');
+      }
 
       // Log History for Analytics
       try {
@@ -160,6 +170,7 @@ export default function App() {
         });
       } catch (err) {
         console.error("Error logging history:", err);
+        handleFirestoreError(err, OperationType.CREATE, 'exports_history');
       }
 
       showToast('PDF Prepared Successfully!');
@@ -177,6 +188,11 @@ export default function App() {
     link.href = generatedPdf.url;
     link.download = generatedPdf.name;
     link.click();
+
+    setShowCongratulation(true);
+    setTimeout(() => {
+      setShowCongratulation(false);
+    }, 6000);
   };
 
   const handleActionView = () => {
@@ -273,6 +289,10 @@ export default function App() {
               link.download = fileName;
               link.click();
               showToast('Sharing failed. Receipt downloaded.');
+              setShowCongratulation(true);
+              setTimeout(() => {
+                setShowCongratulation(false);
+              }, 6000);
             }
           }
         } else {
@@ -286,6 +306,10 @@ export default function App() {
           const waMessage = encodeURIComponent(shareText + "\n\n(Image downloaded to your device, please attach it manually.)");
           window.open(`https://wa.me/?text=${waMessage}`, '_blank');
           showToast('Image saved. Please attach in WhatsApp.');
+          setShowCongratulation(true);
+          setTimeout(() => {
+            setShowCongratulation(false);
+          }, 6000);
         }
         setIsSharingWhatsApp(false);
         setIsCapturingImage(false);
@@ -366,6 +390,11 @@ export default function App() {
         showToast('Image Saved Successfully!');
         setIsDownloadingImage(false);
         setIsCapturingImage(false);
+        
+        setShowCongratulation(true);
+        setTimeout(() => {
+          setShowCongratulation(false);
+        }, 6000);
       }, 'image/jpeg', 1.0);
     } catch (error) {
       console.error('Image capture error:', error);
@@ -981,6 +1010,70 @@ Don't just run a business, command a BRAND that speaks for itself.
             <CheckCircle2 size={14} className="text-emerald-400" />
             <span>{toastMessage}</span>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showCongratulation && (
+          <div className="fixed top-0 left-0 right-0 z-[100001] flex justify-center pointer-events-none p-4">
+            <motion.div
+              initial={{ opacity: 0, y: -150, scale: 0.95 }}
+              animate={{ opacity: 1, y: 24, scale: 1 }}
+              exit={{ opacity: 0, y: -150, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
+              className="w-full max-w-lg bg-slate-900/95 backdrop-blur-xl border border-emerald-500/30 rounded-[2rem] p-6 text-center shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8),0_0_50px_rgba(16,185,129,0.2)] pointer-events-auto"
+            >
+              <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/10 to-transparent rounded-[2rem] pointer-events-none" />
+              <div className="relative z-10 flex flex-col items-center">
+                {/* Animated Icon */}
+                <motion.div
+                  initial={{ rotate: -15, scale: 0 }}
+                  animate={{ rotate: 0, scale: 1 }}
+                  transition={{ type: "spring", delay: 0.15 }}
+                  className="w-14 h-14 bg-gradient-to-tr from-emerald-400 to-teal-500 rounded-2xl flex items-center justify-center text-white text-3xl shadow-lg mb-4"
+                >
+                  🎉
+                </motion.div>
+                
+                <motion.h4
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-xl font-black text-white uppercase tracking-wider mb-2"
+                >
+                  Success!
+                </motion.h4>
+                
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25 }}
+                  className="text-xs font-bold text-emerald-300 uppercase tracking-widest mb-3 bg-emerald-500/10 px-4 py-1 rounded-full border border-emerald-500/20"
+                >
+                  Document Downloaded Successfully
+                </motion.p>
+                
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-slate-300 text-xs sm:text-sm max-w-md leading-relaxed"
+                >
+                  Your professional document has been saved. Send it to your client to build trust, command authority, and accelerate payment!
+                </motion.p>
+                
+                {/* Progress timer bar */}
+                <div className="w-full bg-slate-800 h-1 rounded-full mt-5 overflow-hidden">
+                  <motion.div
+                    initial={{ width: "100%" }}
+                    animate={{ width: "0%" }}
+                    transition={{ duration: 6, ease: "linear" }}
+                    className="bg-gradient-to-r from-emerald-400 to-teal-500 h-full"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
