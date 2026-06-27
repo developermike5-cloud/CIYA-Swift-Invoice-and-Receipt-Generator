@@ -12,6 +12,59 @@ import { cn, generateInvNumber } from './lib/utils';
 import { db, handleFirestoreError, OperationType } from './lib/firebase';
 import { doc, onSnapshot, updateDoc, increment, serverTimestamp, setDoc, getDoc, collection, addDoc, query, orderBy, limit, getDocs } from 'firebase/firestore';
 
+async function sanitizeStylesheets() {
+  const restoredStyles: { element: HTMLStyleElement; text: string }[] = [];
+  const restoredLinks: { element: HTMLLinkElement; tempStyle?: HTMLStyleElement }[] = [];
+
+  // 1. Process inline <style> elements
+  document.querySelectorAll('style').forEach((styleEl) => {
+    const text = styleEl.textContent || '';
+    if (text.includes('oklch') || text.includes('oklab')) {
+      restoredStyles.push({ element: styleEl, text });
+      styleEl.textContent = text.replace(/oklch/g, 'rgb').replace(/oklab/g, 'rgb');
+    }
+  });
+
+  // 2. Process external <link> elements (same-origin only to avoid CORS exceptions)
+  const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]')) as HTMLLinkElement[];
+  for (const link of links) {
+    if (!link.href) continue;
+    
+    const isSameOrigin = link.href.startsWith(window.location.origin) || !link.href.startsWith('http');
+    if (isSameOrigin) {
+      try {
+        const response = await fetch(link.href);
+        if (response.ok) {
+          const cssText = await response.text();
+          if (cssText.includes('oklch') || cssText.includes('oklab')) {
+            const tempStyle = document.createElement('style');
+            tempStyle.textContent = cssText.replace(/oklch/g, 'rgb').replace(/oklab/g, 'rgb');
+            document.head.appendChild(tempStyle);
+            
+            link.disabled = true;
+            restoredLinks.push({ element: link, tempStyle });
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to sanitize link stylesheet:', link.href, err);
+      }
+    }
+  }
+
+  // Return restore function
+  return () => {
+    for (const item of restoredStyles) {
+      item.element.textContent = item.text;
+    }
+    for (const item of restoredLinks) {
+      item.element.disabled = false;
+      if (item.tempStyle) {
+        item.tempStyle.remove();
+      }
+    }
+  };
+}
+
 export default function App() {
   const [data, setData] = useLocalStorage<InvoiceData>('swift-invoice-data', {
     ...DEFAULT_INVOICE,
@@ -139,7 +192,9 @@ export default function App() {
       jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
     };
 
+    let restoreStyles: (() => void) | null = null;
     try {
+      restoreStyles = await sanitizeStylesheets();
       // Generate as Blob instead of direct save
       const blob = await html2pdf().set(opt).from(element).outputPdf('blob');
       const url = URL.createObjectURL(blob);
@@ -178,6 +233,7 @@ export default function App() {
       console.error('PDF Generation Error:', error);
       showToast('Export failed. Please try again.');
     } finally {
+      if (restoreStyles) restoreStyles();
       setIsExporting(false);
     }
   };
@@ -206,7 +262,9 @@ export default function App() {
 
     setIsSharingWhatsApp(true);
     setIsCapturingImage(true);
+    let restoreStyles: (() => void) | null = null;
     try {
+      restoreStyles = await sanitizeStylesheets();
       // 1. Create a clean capture portal to avoid all parent styles/scaling/scroll
       const portal = document.createElement('div');
       portal.style.position = 'absolute';
@@ -319,6 +377,8 @@ export default function App() {
       showToast('Capture failed. Using PDF fallback.');
       setIsSharingWhatsApp(false);
       setIsCapturingImage(false);
+    } finally {
+      if (restoreStyles) restoreStyles();
     }
   };
 
@@ -328,7 +388,9 @@ export default function App() {
 
     setIsDownloadingImage(true);
     setIsCapturingImage(true);
+    let restoreStyles: (() => void) | null = null;
     try {
+      restoreStyles = await sanitizeStylesheets();
       const portal = document.createElement('div');
       portal.style.position = 'absolute';
       portal.style.top = '-9999px';
@@ -401,6 +463,8 @@ export default function App() {
       showToast('Download failed.');
       setIsDownloadingImage(false);
       setIsCapturingImage(false);
+    } finally {
+      if (restoreStyles) restoreStyles();
     }
   };
 
